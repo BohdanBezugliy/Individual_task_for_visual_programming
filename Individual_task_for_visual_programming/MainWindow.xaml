@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Individual_task_for_visual_programming"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Ханойська вежа" Loaded="Window_Loaded" Height="350" Width="800" FontFamily="Segoe UI" FontSize="14" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
+            <ComboBox x:Name="comboBox" Width="50" Margin="5"
+                      HorizontalAlignment="Left" 
+                      SelectionChanged="ComboBox_SelectionChanged"/>
+        </StackPanel>
+        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Margin="5">
+            <DockPanel x:Name="panel1" LastChildFill="False">
 
+            </DockPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Grid.Column="1" Margin="5">
+            <DockPanel x:Name="panel2" LastChildFill="False">
+
+            </DockPanel>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Grid.Column="2" Margin="5">
+            <DockPanel x:Name="panel3" LastChildFill="False">
+
+            </DockPanel>
+        </Border>
     </Grid>
 </Window>
