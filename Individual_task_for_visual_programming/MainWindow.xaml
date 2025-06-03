@@ -8,13 +8,96 @@
         Title="Ханойська вежа" Loaded="Window_Loaded" Height="350" Width="800" 
         FontFamily="Segoe UI" Foreground="#5B3A29" FontSize="14" WindowStartupLocation="CenterScreen" Background="#FFF8DC">
     <Window.Resources>
-        <Style TargetType="ComboBox" x:Key="MyComboBoxStyle">
+        <SolidColorBrush x:Key="ComboBorderBrush" Color="#A0522D"/>
+        <SolidColorBrush x:Key="ComboBackgroundBrush" Color="#FAF0E6"/>
+        <SolidColorBrush x:Key="ComboForegroundBrush" Color="#5B3A29"/>
+
+        <Style x:Key="MyComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="Foreground" Value="{StaticResource ComboForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource ComboBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid Width="50">
+                            <ToggleButton 
+                            Name="ToggleButton"
+                            Grid.Column="2"
+                            Focusable="False"
+                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            ClickMode="Press"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <Path 
+                                x:Name="Arrow"
+                                Fill="{TemplateBinding Foreground}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Data="M 0 0 L 4 4 L 8 0 Z" Margin="30,0,0,0"/>
+                            </ToggleButton>
+
+                            <ContentPresenter
+                            Name="ContentSite"
+                            IsHitTestVisible="False"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                            Margin="6,2,25,2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"/>
+
+                            <Popup 
+                            Name="Popup"
+                            Placement="Bottom"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            PopupAnimation="Slide">
+                                <Border BorderBrush="{StaticResource ComboBorderBrush}" BorderThickness="1">
+                                    <Grid
+                                        Name="DropDown"
+                                        SnapsToDevicePixels="True"
+                                        MinWidth="{TemplateBinding ActualWidth}"
+                                        Background="{StaticResource ComboBackgroundBrush}">
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Hidden">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="DropDown" Property="MinHeight" Value="30"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="Background" Value="#FFE5E5E5"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#C08040"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="MyBtnStyle">
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="Foreground" Value="#5B3A29"/>
             <Setter Property="Background" Value="#FAF0E6"/>
             <Setter Property="BorderBrush" Value="#A0522D"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Width" Value="85"/>
         </Style>
     </Window.Resources>
     <Grid Margin="5" DragEnter="panel1_DragEnter" DragOver="panel1_DragEnter" Drop="panel1_Drop">
@@ -31,6 +114,9 @@
             <ComboBox x:Name="comboBox" Width="50" Margin="5" Style="{StaticResource MyComboBoxStyle}"
                       HorizontalAlignment="Left" 
                       SelectionChanged="ComboBox_SelectionChanged"/>
+            <Button Content="Скидання" Style="{StaticResource MyBtnStyle}" Margin="5,0" Click="Button_Click"/>
+            <TextBlock x:Name="lblMsg" VerticalAlignment="Center" Margin="10,0" Text="Score"/>
+            <TextBlock x:Name="lblMsgVictory" VerticalAlignment="Center" Margin="10,0" Foreground="Green" Text="Задача розв'язана!"/>
         </StackPanel>
         <Border BorderThickness="1" BorderBrush="#A0522D" Grid.Row="1" Margin="5">
             <DockPanel x:Name="panel1" LastChildFill="False" Background="#FAF0E6" AllowDrop="True">

@@ -14,6 +14,12 @@ namespace Individual_task_for_visual_programming;
 
 public partial class MainWindow : Window
 {
+    int count;
+    int minCount;
+    void info()
+    {
+        lblMsg.Text = string.Format("Число переміщень: {0}({1})",count,minCount);
+    }
     Color[] colors = new Color[]
 {
     (Color)ColorConverter.ConvertFromString("#8B4513"), // SaddleBrown
@@ -52,7 +58,11 @@ public partial class MainWindow : Window
         panel2.Children.Clear();
         panel3.Children.Clear();
         var w = (panel1.ActualWidth-20)/(2*total);
-        for(int i = 0; i < total; i++)
+        count = 0;
+        minCount = (int)Math.Round(Math.Pow(2, total)) - 1;
+        info();
+        lblMsgVictory.Visibility = Visibility.Hidden;
+        for (int i = 0; i < total; i++)
         {
             Rectangle r = new Rectangle();
             r.Width = panel1.ActualWidth - (20+i*2*w);
@@ -83,6 +93,11 @@ public partial class MainWindow : Window
     {
         (r.Parent as DockPanel).Children.Remove(r);
         panel.Children.Add(r);
+        count++;
+        info();
+        if (panel2.Children.Count == total || panel3.Children.Count == total) {
+            lblMsgVictory.Visibility = Visibility.Visible;
+        }
     }
 
     private void R_MouseDown(object sender, MouseButtonEventArgs e)
@@ -100,10 +115,18 @@ public partial class MainWindow : Window
         var oldPanel = r.Parent as DockPanel;
         var c = panel.Children.Count;
         var k = c > 0 ? (panel.Children[c-1] as Rectangle).Width : double.MaxValue;
-        e.Effects = oldPanel.Children.IndexOf(r) == 
-            oldPanel.Children.Count-1 && r.Width <= k ? 
-            DragDropEffects.Move : DragDropEffects.None;
-        e.Handled = true;
+        if (lblMsgVictory.IsVisible)
+        {
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
+        }
+        else
+        {
+            e.Effects = oldPanel.Children.IndexOf(r) ==
+                oldPanel.Children.Count - 1 && r.Width <= k ?
+                DragDropEffects.Move : DragDropEffects.None;
+            e.Handled = true;
+        }
     }
 
     private void panel1_Drop(object sender, DragEventArgs e)
@@ -113,5 +136,10 @@ public partial class MainWindow : Window
         var r = e.Data.GetData(typeof(Rectangle)) as Rectangle;
         if(panel == r.Parent) return;
         MoveRect(r, panel);
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        ComboBox_SelectionChanged(null, null);
     }
 }
