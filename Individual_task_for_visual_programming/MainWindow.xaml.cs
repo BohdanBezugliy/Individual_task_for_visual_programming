@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,19 +12,40 @@ using System.Windows.Shapes;
 
 namespace Individual_task_for_visual_programming;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
+    Color[] colors = new Color[]
+{
+    (Color)ColorConverter.ConvertFromString("#8B4513"), // SaddleBrown
+    (Color)ColorConverter.ConvertFromString("#CD853F"), // Peru
+    (Color)ColorConverter.ConvertFromString("#DEB887"), // BurlyWood
+    (Color)ColorConverter.ConvertFromString("#F5DEB3"), // Wheat
+    (Color)ColorConverter.ConvertFromString("#D2B48C"), // Tan
+    (Color)ColorConverter.ConvertFromString("#BC8F8F"), // RosyBrown
+    (Color)ColorConverter.ConvertFromString("#FFDEAD"), // NavajoWhite
+    (Color)ColorConverter.ConvertFromString("#F4A460"), // SandyBrown
+    (Color)ColorConverter.ConvertFromString("#D2691E"), // Chocolate
+    (Color)ColorConverter.ConvertFromString("#FFE4B5"),  // Moccasin
+};
+
     Random rdn = new Random();
     int total;
+
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        comboBox.ItemsSource = Enumerable.Range(2, 9).
+            Select(i => i.ToString());
+        comboBox.SelectedIndex = 8;
+        comboBox.Focus();
+    }
+
+    private void ComboBox_SelectionChanged(object sender, 
+        SelectionChangedEventArgs e)
     {
         total = int.Parse(comboBox.SelectedItem.ToString());
         panel1.Children.Clear();
@@ -40,21 +62,58 @@ public partial class MainWindow : Window
             DockPanel.SetDock(r,Dock.Bottom);
             LinearGradientBrush b = new LinearGradientBrush();
             b.StartPoint = new Point(0.5, 0);
-            b.EndPoint = new Point(0.5, 0.5);
-            Color c1 = Color.FromRgb((byte)rdn.Next(256), (byte)rdn.Next(256), (byte)rdn.Next(256));
+            b.EndPoint = new Point(0.5, 1);
+            Color c1 = colors[rdn.Next(colors.Length)];
             b.GradientStops.Add(new GradientStop(Colors.White, 0));
-            b.GradientStops.Add(new GradientStop(c1, 2));
+            b.GradientStops.Add(new GradientStop(c1, 1));
             r.Fill = b;
-            r.RadiusX = r.Height / 8;
-            r.RadiusY = r.Height / 8;
+            r.RadiusX = r.Height / 3;
+            r.RadiusY = r.Height / 3;
             panel1.Children.Add(r);
+            r.MouseDown += R_MouseDown;
         }
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    DockPanel GetPanel(object trg)
     {
-        comboBox.ItemsSource = Enumerable.Range(2, 9).Select(i => i.ToString());
-        comboBox.SelectedIndex = 8;
-        comboBox.Focus();
+        var panel = trg as DockPanel;
+        if (panel != null)return panel;
+        var r = trg as Rectangle;
+        if (r != null)return r.Parent as DockPanel;
+        return null;
+    }
+
+    void MoveRect(Rectangle r, DockPanel panel)
+    {
+        (r.Parent as DockPanel).Children.Remove(r);
+        panel.Children.Add(r);
+    }
+
+    private void R_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton == MouseButton.Left)
+            DragDrop.DoDragDrop(sender as Rectangle, sender, 
+                DragDropEffects.Move);
+    }
+
+    private void panel1_DragEnter(object sender, DragEventArgs e)
+    {
+        var panel = GetPanel(e.Source);
+        if (panel == null) return;
+        var r=e.Data.GetData(typeof(Rectangle)) as Rectangle;
+        var oldPanel = r.Parent as DockPanel;
+        e.Effects = oldPanel.Children.IndexOf(r) == 
+            oldPanel.Children.Count-1 ? 
+            DragDropEffects.Move : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private void panel1_Drop(object sender, DragEventArgs e)
+    {
+        var panel = GetPanel(e.Source);
+        if (panel == null) return;
+        var r = e.Data.GetData(typeof(Rectangle)) as Rectangle;
+        if(panel == r.Parent) return;
+        MoveRect(r, panel);
     }
 }

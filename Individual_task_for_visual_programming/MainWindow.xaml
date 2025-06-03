@@ -5,11 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Individual_task_for_visual_programming"
         mc:Ignorable="d"
-        Title="Ханойська вежа" Loaded="Window_Loaded" Height="350" Width="800" FontFamily="Segoe UI" FontSize="14" WindowStartupLocation="CenterScreen">
+        Title="Ханойська вежа" Loaded="Window_Loaded" Height="350" Width="800" 
+        FontFamily="Segoe UI" Foreground="#5B3A29" FontSize="14" WindowStartupLocation="CenterScreen" Background="#FFF8DC">
     <Window.Resources>
-        
+        <Style TargetType="ComboBox" x:Key="MyComboBoxStyle">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Foreground" Value="#5B3A29"/>
+            <Setter Property="Background" Value="#FAF0E6"/>
+            <Setter Property="BorderBrush" Value="#A0522D"/>
+        </Style>
     </Window.Resources>
-    <Grid Margin="5">
+    <Grid Margin="5" DragEnter="panel1_DragEnter" DragOver="panel1_DragEnter" Drop="panel1_Drop">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
@@ -20,22 +28,22 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-            <ComboBox x:Name="comboBox" Width="50" Margin="5"
+            <ComboBox x:Name="comboBox" Width="50" Margin="5" Style="{StaticResource MyComboBoxStyle}"
                       HorizontalAlignment="Left" 
                       SelectionChanged="ComboBox_SelectionChanged"/>
         </StackPanel>
-        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Margin="5">
-            <DockPanel x:Name="panel1" LastChildFill="False">
+        <Border BorderThickness="1" BorderBrush="#A0522D" Grid.Row="1" Margin="5">
+            <DockPanel x:Name="panel1" LastChildFill="False" Background="#FAF0E6" AllowDrop="True">
 
             </DockPanel>
         </Border>
-        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Grid.Column="1" Margin="5">
-            <DockPanel x:Name="panel2" LastChildFill="False">
+        <Border BorderThickness="1" BorderBrush="#A0522D" Grid.Row="1" Grid.Column="1" Margin="5">
+            <DockPanel x:Name="panel2" LastChildFill="False" Background="#FAF0E6" AllowDrop="True">
 
             </DockPanel>
         </Border>
-        <Border BorderThickness="1" BorderBrush="Black" Grid.Row="1" Grid.Column="2" Margin="5">
-            <DockPanel x:Name="panel3" LastChildFill="False">
+        <Border BorderThickness="1" BorderBrush="#A0522D" Grid.Row="1" Grid.Column="2" Margin="5">
+            <DockPanel x:Name="panel3" LastChildFill="False" Background="#FAF0E6" AllowDrop="True">
 
             </DockPanel>
         </Border>
