@@ -76,11 +76,7 @@ public partial class MainWindow : Window
 
     DockPanel GetPanel(object trg)
     {
-        var panel = trg as DockPanel;
-        if (panel != null)return panel;
-        var r = trg as Rectangle;
-        if (r != null)return r.Parent as DockPanel;
-        return null;
+        return (trg as DockPanel) ?? (trg as Rectangle)?.Parent as DockPanel;
     }
 
     void MoveRect(Rectangle r, DockPanel panel)
@@ -102,8 +98,10 @@ public partial class MainWindow : Window
         if (panel == null) return;
         var r=e.Data.GetData(typeof(Rectangle)) as Rectangle;
         var oldPanel = r.Parent as DockPanel;
+        var c = panel.Children.Count;
+        var k = c > 0 ? (panel.Children[c-1] as Rectangle).Width : double.MaxValue;
         e.Effects = oldPanel.Children.IndexOf(r) == 
-            oldPanel.Children.Count-1 ? 
+            oldPanel.Children.Count-1 && r.Width <= k ? 
             DragDropEffects.Move : DragDropEffects.None;
         e.Handled = true;
     }
