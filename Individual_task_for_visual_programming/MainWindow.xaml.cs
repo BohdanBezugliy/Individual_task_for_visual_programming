@@ -102,6 +102,7 @@ public partial class MainWindow : Window
 
     private void R_MouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (!button1.IsEnabled) return;
         if (e.ChangedButton == MouseButton.Left)
             DragDrop.DoDragDrop(sender as Rectangle, sender, 
                 DragDropEffects.Move);
@@ -119,6 +120,7 @@ public partial class MainWindow : Window
         {
             e.Effects = DragDropEffects.None;
             e.Handled = true;
+            return;
         }
         else
         {
@@ -141,5 +143,31 @@ public partial class MainWindow : Window
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         ComboBox_SelectionChanged(null, null);
+    }
+
+    private void button2_Click(object sender, RoutedEventArgs e)
+    {
+        comboBox.IsEnabled = button1.IsEnabled = !button1.IsEnabled;
+        if (!button1.IsEnabled)
+        {
+            if (panel1.Children.Count != total)
+                ComboBox_SelectionChanged(null, null);
+            Step(total, panel1, panel3, panel2);
+            comboBox.IsEnabled = button1.IsEnabled = true;
+        }
+    }
+    public static void DoEvents()
+    {
+        Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Background, new Action(delegate { }));
+    }
+    private void Step(int k, DockPanel src, DockPanel dst, DockPanel tmp)
+    {
+        if (k == 0) return;
+        Step(k - 1, src, tmp, dst);
+        if (button1.IsEnabled) return;
+        MoveRect(src.Children[src.Children.Count-1] as Rectangle,dst);
+        DoEvents();
+        System.Threading.Thread.Sleep(1500/(total-1));
+        Step(k - 1, tmp, dst, src);
     }
 }

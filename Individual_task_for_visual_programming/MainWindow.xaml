@@ -114,7 +114,8 @@
             <ComboBox x:Name="comboBox" Width="50" Margin="5" Style="{StaticResource MyComboBoxStyle}"
                       HorizontalAlignment="Left" 
                       SelectionChanged="ComboBox_SelectionChanged"/>
-            <Button Content="Скидання" Style="{StaticResource MyBtnStyle}" Margin="5,0" Click="Button_Click"/>
+            <Button x:Name="button1" Content="Скидання" Style="{StaticResource MyBtnStyle}" Margin="5,0" Click="Button_Click"/>
+            <Button x:Name="button2" Content="Демо" Style="{StaticResource MyBtnStyle}" Width="75" Margin="5" Click="button2_Click" />
             <TextBlock x:Name="lblMsg" VerticalAlignment="Center" Margin="10,0" Text="Score"/>
             <TextBlock x:Name="lblMsgVictory" VerticalAlignment="Center" Margin="10,0" Foreground="Green" Text="Задача розв'язана!"/>
         </StackPanel>
